@@ -3,11 +3,12 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Менеджер гри: відстежує стан гри, фініш, UI.
+/// Менеджер гри: відстежує стан гри, фініш, програш, UI.
 /// </summary>
 public class GameManager : MonoBehaviour
 {
     public bool IsFinished { get; private set; }
+    public bool IsGameOver => GameData.Instance.IsGameOver;
 
     [Header("UI")]
     public GameObject finishUI;
@@ -18,6 +19,17 @@ public class GameManager : MonoBehaviour
         IsFinished = false;
         if (finishUI != null)
             finishUI.SetActive(false);
+
+        // Підписка на подію програшу
+        GameData.Instance.OnGameOver += HandleGameOver;
+        GameData.Instance.ResetForNewRun();
+        GameData.Instance.StartRun();
+    }
+
+    void OnDestroy()
+    {
+        if (GameData.Instance != null)
+            GameData.Instance.OnGameOver -= HandleGameOver;
     }
 
     public void FinishGame()
@@ -28,14 +40,23 @@ public class GameManager : MonoBehaviour
         Debug.Log("Фініш! Гравець завершив рівень.");
     }
 
+    private void HandleGameOver()
+    {
+        IsFinished = true;
+        Debug.Log("[GameManager] Гра закінчена — програш.");
+    }
+
     public void RestartGame()
     {
+        GameData.Instance.ResetForNewRun();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     void Update()
     {
-        if (IsFinished && Keyboard.current != null && Keyboard.current.rKey.wasPressedThisFrame)
+        if (Keyboard.current == null) return;
+
+        if ((IsFinished || IsGameOver) && Keyboard.current.rKey.wasPressedThisFrame)
         {
             RestartGame();
         }

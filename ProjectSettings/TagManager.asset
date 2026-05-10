@@ -8,6 +8,8 @@ TagManager:
   - Pit
   - Finish
   - BoostPickup
+  - Coin
+  - Trap
   layers:
   - Default
   - TransparentFX

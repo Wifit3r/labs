@@ -151,10 +151,13 @@ public class PlayerController : MonoBehaviour
     {
         if (hit.gameObject.CompareTag("Obstacle"))
         {
-            // Якщо зіткнення збоку або спереду — повернення на старт
             if (hit.normal.z < -0.5f || Mathf.Abs(hit.normal.x) > 0.5f)
             {
-                ResetToStart();
+                GameData.Instance.LoseLife();
+                if (GameData.Instance.IsGameOver)
+                    Die();
+                else
+                    ResetToStart();
             }
         }
     }
@@ -163,18 +166,35 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("Pit"))
         {
-            ResetToStart();
+            GameData.Instance.LoseLife();
+            if (!GameData.Instance.IsGameOver)
+                ResetToStart();
+            else
+                Die();
         }
         else if (other.CompareTag("Finish"))
         {
+            GameData.Instance.FinishLevel();
             if (gameManager != null)
                 gameManager.FinishGame();
         }
         else if (other.CompareTag("BoostPickup"))
         {
-            // Скинути таймер прискорення
             currentBoostTime = 0f;
             Destroy(other.gameObject);
+        }
+        else if (other.CompareTag("Coin"))
+        {
+            GameData.Instance.CollectCoin();
+            Destroy(other.gameObject);
+        }
+        else if (other.CompareTag("Trap"))
+        {
+            GameData.Instance.LoseLife();
+            if (GameData.Instance.IsGameOver)
+                Die();
+            else
+                ResetToStart();
         }
     }
 

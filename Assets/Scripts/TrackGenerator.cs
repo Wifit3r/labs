@@ -10,9 +10,11 @@ public class TrackGenerator : MonoBehaviour
     public float segmentLength = 20f;
     public int totalSegments = 30;
 
-    [Header("Перешкоди")]
+    [Header("Перешкоди та об'єкти")]
     public float obstacleChance = 0.3f;
     public float pitChance = 0.15f;
+    public float coinChance = 0.5f;
+    public float trapChance = 0.2f;
     public float laneDistance = 3f;
 
     [Header("Матеріали")]
@@ -45,6 +47,18 @@ public class TrackGenerator : MonoBehaviour
                 if (i > 1 && i < totalSegments - 1 && Random.value < obstacleChance)
                 {
                     CreateObstacle(zPos);
+                }
+
+                // Монети
+                if (i > 0 && i < totalSegments - 1 && Random.value < coinChance)
+                {
+                    CreateCoin(zPos);
+                }
+
+                // Пастки
+                if (i > 2 && i < totalSegments - 1 && Random.value < trapChance)
+                {
+                    CreateTrap(zPos);
                 }
             }
         }
@@ -119,6 +133,38 @@ public class TrackGenerator : MonoBehaviour
         edgeAfter.transform.localScale = new Vector3(trackWidth, 1f, segmentLength * 0.1f);
         edgeAfter.transform.parent = transform;
         edgeAfter.GetComponent<Renderer>().material.color = Color.gray;
+    }
+
+    void CreateCoin(float zPosition)
+    {
+        int lane = Random.Range(-1, 2);
+        float xPos = lane * laneDistance;
+
+        GameObject coin = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        coin.name = "Coin";
+        coin.tag = "Coin";
+        coin.transform.position = new Vector3(xPos, 1.2f, zPosition + segmentLength * 0.7f);
+        coin.transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
+        coin.transform.parent = transform;
+
+        coin.GetComponent<Collider>().isTrigger = true;
+        coin.GetComponent<Renderer>().material.color = Color.yellow;
+    }
+
+    void CreateTrap(float zPosition)
+    {
+        int lane = Random.Range(-1, 2);
+        float xPos = lane * laneDistance;
+
+        GameObject trap = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+        trap.name = "Trap";
+        trap.tag = "Trap";
+        trap.transform.position = new Vector3(xPos, 0.15f, zPosition + segmentLength * 0.3f);
+        trap.transform.localScale = new Vector3(1.5f, 0.15f, 1.5f);
+        trap.transform.parent = transform;
+
+        trap.GetComponent<Collider>().isTrigger = true;
+        trap.GetComponent<Renderer>().material.color = new Color(0.8f, 0f, 0.8f); // фіолетовий
     }
 
     void CreateFinish(float zPosition)

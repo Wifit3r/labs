@@ -10,14 +10,21 @@ public class GameSetup : EditorWindow
     [MenuItem("Tools/Setup Runner Game")]
     public static void SetupGame()
     {
+        SetupTags();
+        CreateGameScene();
+        Debug.Log("Runner Game налаштовано! Натисніть Play.");
+    }
+
+    [MenuItem("Tools/Setup Tags Only")]
+    public static void SetupTags()
+    {
         AddTag("Obstacle");
         AddTag("Pit");
         AddTag("Finish");
         AddTag("BoostPickup");
-
-        CreateGameScene();
-
-        Debug.Log("Runner Game налаштовано! Натисніть Play.");
+        AddTag("Coin");
+        AddTag("Trap");
+        Debug.Log("Теги додано.");
     }
 
     static void AddTag(string tagName)
@@ -67,6 +74,7 @@ public class GameSetup : EditorWindow
         // GameManager
         GameObject gm = new GameObject("GameManager");
         gm.AddComponent<GameManager>();
+        gm.AddComponent<GameOverHandler>();
 
         // Освітлення (якщо немає)
         if (FindObjectOfType<Light>() == null)
