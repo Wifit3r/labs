@@ -37,6 +37,10 @@ public class GameManager : MonoBehaviour
         IsFinished = true;
         if (finishUI != null)
             finishUI.SetActive(true);
+
+        var ui = FindObjectOfType<UIManager>();
+        if (ui != null) ui.ShowFinish();
+
         Debug.Log("Фініш! Гравець завершив рівень.");
     }
 

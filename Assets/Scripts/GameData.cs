@@ -38,6 +38,9 @@ public class GameData : MonoBehaviour
     public int CoinsCollected { get; private set; }
     public bool IsGameOver { get; private set; }
 
+    // Логін гравця
+    public string PlayerLogin { get; set; } = "Player";
+
     // Таблиця рекордів
     public List<RecordEntry> Records { get; private set; } = new List<RecordEntry>();
 
@@ -117,6 +120,7 @@ public class GameData : MonoBehaviour
         // Додати запис до таблиці рекордів
         Records.Add(new RecordEntry
         {
+            login = PlayerLogin,
             coins = CoinsCollected,
             time = ElapsedTime,
             date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
@@ -141,6 +145,7 @@ public class GameData : MonoBehaviour
 
         Records.Add(new RecordEntry
         {
+            login = PlayerLogin,
             coins = CoinsCollected,
             time = ElapsedTime,
             date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
@@ -195,6 +200,7 @@ public class GameData : MonoBehaviour
 [Serializable]
 public class RecordEntry
 {
+    public string login;
     public int coins;
     public float time;
     public string date;

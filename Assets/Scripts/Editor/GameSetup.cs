@@ -75,6 +75,7 @@ public class GameSetup : EditorWindow
         GameObject gm = new GameObject("GameManager");
         gm.AddComponent<GameManager>();
         gm.AddComponent<GameOverHandler>();
+        gm.AddComponent<UIManager>();
 
         // Освітлення (якщо немає)
         if (FindObjectOfType<Light>() == null)
